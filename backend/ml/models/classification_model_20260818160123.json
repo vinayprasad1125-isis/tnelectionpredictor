@@ -1,0 +1,41 @@
+{
+    "task_type": "classification",
+    "model_name": "RandomForest",
+    "training_date": "2026-08-18T16:01:23.654031",
+    "model_version": "20260818160123",
+    "features_used": [
+        "hist_prev_seats",
+        "hist_prev_vote_share",
+        "hist_prev_const_vote_share",
+        "party_abbreviation",
+        "constituency_type"
+    ],
+    "metrics": {
+        "accuracy": 1.0,
+        "balanced_accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "macro_f1": 1.0,
+        "confusion_matrix": [
+            [
+                4,
+                0
+            ],
+            [
+                0,
+                2
+            ]
+        ],
+        "log_loss": 0.19194707754411014
+    },
+    "feature_importance": {
+        "hist_prev_const_vote_share": 0.6441895761741122,
+        "hist_prev_vote_share": 0.12405498281786942,
+        "hist_prev_seats": 0.09123711340206186,
+        "x0_PB": 0.06400343642611686,
+        "x0_PC": 0.05876288659793817,
+        "x0_PA": 0.017752004581901494,
+        "x1_GEN": 0.0
+    }
+}

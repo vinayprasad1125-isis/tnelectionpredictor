@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    --bg-dashboard: #f8fafc;
+    @apply text-primary antialiased min-h-screen;
+    background-color: var(--bg-dashboard);
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white shadow-sm rounded-xl;
+  }
+  .glass-panel {
+    @apply bg-white/60 backdrop-blur-md border-r border-slate-200;
+  }
+}

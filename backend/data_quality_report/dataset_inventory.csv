@@ -1,0 +1,2 @@
+Filename,Format,Rows,Columns,Source,Source URL,Access Date,Description,Is ML Ready
+mock_elections.csv,CSV,19,12,UNVERIFIED,UNVERIFIED,UNVERIFIED,Dataset contains fabricated/mock election data. Marked as UNVERIFIED as per Phase 4 strict rules against fabricating URLs.,Yes (Structure only)

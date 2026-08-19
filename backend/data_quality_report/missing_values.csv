@@ -1,0 +1,13 @@
+Column,Total Rows,Missing Rows,Missing %
+year,19,0,0.0
+election_type,19,0,0.0
+state,19,0,0.0
+constituency_number,19,0,0.0
+constituency_name,19,0,0.0
+constituency_type,19,0,0.0
+district,19,0,0.0
+candidate_name,19,0,0.0
+party_name,19,0,0.0
+party_abbreviation,19,0,0.0
+votes_received,19,0,0.0
+vote_percentage,19,0,0.0

@@ -1,0 +1,27 @@
+{
+    "task_type": "regression",
+    "model_name": "RandomForest",
+    "training_date": "2026-08-18T16:01:23.825226",
+    "model_version": "20260818160123",
+    "features_used": [
+        "hist_prev_seats",
+        "hist_prev_vote_share",
+        "hist_prev_const_vote_share",
+        "party_abbreviation",
+        "constituency_type"
+    ],
+    "metrics": {
+        "mae": 2.574566666666697,
+        "rmse": 2.8863397911542212,
+        "r2": 0.9620619625347622
+    },
+    "feature_importance": {
+        "x0_PC": 0.45219690858546296,
+        "hist_prev_const_vote_share": 0.19871976559376917,
+        "hist_prev_seats": 0.1768387140093747,
+        "hist_prev_vote_share": 0.14839155436291288,
+        "x0_PB": 0.013471214698346399,
+        "x0_PA": 0.010381842750133909,
+        "x1_GEN": 0.0
+    }
+}
