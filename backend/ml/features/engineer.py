@@ -27,7 +27,7 @@ class FeatureEngineer:
             logger.warning("Not enough historical years to engineer features without leakage.")
             return self.df
 
-        for target_year in years[1:]:
+        for target_year in years:
             # Slice historical data strictly strictly BEFORE the target year
             hist_df = self.df[self.df['year'] < target_year].copy()
             target_df = self.df[self.df['year'] == target_year].copy()
@@ -43,8 +43,11 @@ class FeatureEngineer:
             target_df = target_df.merge(constituency_features, on=['constituency_name', 'party_abbreviation'], how='left')
             
             # Fill missing historical features (for new parties/candidates)
-            cols_to_fill = [c for c in target_df.columns if c.startswith('hist_')]
-            target_df[cols_to_fill] = target_df[cols_to_fill].fillna(0)
+            # Only fill with 0 if it's not the very first year. For the first year, 
+            # we legitimately don't know the past, so we leave it as NaN for imputation.
+            if target_year != years[0]:
+                cols_to_fill = [c for c in target_df.columns if c.startswith('hist_')]
+                target_df[cols_to_fill] = target_df[cols_to_fill].fillna(0)
 
             features_list.append(target_df)
 
@@ -58,7 +61,7 @@ class FeatureEngineer:
         Uses the most recent election in hist_df for 'previous' features.
         """
         if hist_df.empty:
-            return pd.DataFrame()
+            return pd.DataFrame(columns=['party_abbreviation', 'hist_prev_seats', 'hist_prev_vote_share'])
             
         last_year = hist_df['year'].max()
         last_election_df = hist_df[hist_df['year'] == last_year]
@@ -80,7 +83,7 @@ class FeatureEngineer:
         Features: prev_constituency_vote_share, prev_is_winner
         """
         if hist_df.empty:
-            return pd.DataFrame()
+            return pd.DataFrame(columns=['constituency_name', 'party_abbreviation', 'hist_prev_const_vote_share', 'hist_prev_is_winner'])
             
         last_year = hist_df['year'].max()
         last_election_df = hist_df[hist_df['year'] == last_year]

@@ -1,0 +1,19 @@
+{
+    "task_type": "regression",
+    "model_name": "LinearRegression",
+    "training_date": "2026-08-19T14:16:31.934888",
+    "model_version": "20260819141631",
+    "features_used": [
+        "hist_prev_seats",
+        "hist_prev_vote_share",
+        "hist_prev_const_vote_share",
+        "party_abbreviation",
+        "constituency_type"
+    ],
+    "metrics": {
+        "mae": 4.49840551733642,
+        "rmse": 10.164358631532712,
+        "r2": 0.27258515170333963
+    },
+    "feature_importance": {}
+}

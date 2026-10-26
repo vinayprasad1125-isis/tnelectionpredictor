@@ -10,7 +10,7 @@ const Predictions = () => {
   const [models, setModels] = useState({});
   const [constituencies, setConstituencies] = useState([]);
   const [selectedConst, setSelectedConst] = useState('');
-  const [selectedYear, setSelectedYear] = useState(2026);
+  const [selectedYear, setSelectedYear] = useState(2031);
   
   const [prediction, setPrediction] = useState(null);
   const [historicalContext, setHistoricalContext] = useState(null);
@@ -143,9 +143,7 @@ const Predictions = () => {
                   onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-accent outline-none bg-white text-slate-800"
                 >
-                  <option value={2026}>2026</option>
                   <option value={2031}>2031</option>
-                  <option value={2036}>2036</option>
                 </select>
               </div>
             </div>

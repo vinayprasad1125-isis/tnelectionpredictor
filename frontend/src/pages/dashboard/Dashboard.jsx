@@ -18,23 +18,25 @@ const Dashboard = () => {
       try {
         setLoading(true);
         // We use Promise.all for parallel fetching
-        const [constituencies, parties, elections, perf] = await Promise.all([
-          dataService.getConstituencies(),
+        const [constituencySummary, parties, elections] = await Promise.all([
+          dataService.getConstituencySummary(),
           dataService.getParties(),
-          dataService.getElections({ ordering: '-year' }),
-          analyticsService.getPartyPerformance(2021) // Get latest election perf as default
+          dataService.getElections({ ordering: '-year' })
         ]);
 
         const latestYear = elections.results.length > 0 ? elections.results[0].year : 'N/A';
+        const perf = await analyticsService.getPartyPerformance(latestYear);
         
         setStats({
-          constituenciesCount: constituencies.count,
-          partiesCount: parties.count,
+          constituenciesCount: constituencySummary.count,
+          partiesCount: parties.results ? parties.results.length : parties.length,
           latestElection: latestYear,
           totalElections: elections.count
         });
         
-        setPerformance(perf.slice(0, 10)); // Top 10 parties
+        const topParties = perf.slice(0, 10);
+        const tvk = perf.find((party) => party.party__abbreviation === 'TVK');
+        setPerformance(tvk && !topParties.includes(tvk) ? [...topParties, tvk] : topParties);
       } catch (err) {
         console.error("Dashboard fetch error:", err);
         setError('Failed to load dashboard data. Please try again.');
@@ -66,7 +68,57 @@ const Dashboard = () => {
         }}
       >
         <img
-          src="/leader-wave.png"
+          src="/vijay.png"
+          alt="Vijay"
+          className="w-full h-auto object-contain select-none"
+          draggable={false}
+          style={{ 
+            filter: 'contrast(1.05) brightness(1.05)'
+          }}
+        />
+      </div>
+
+      {/* Decorative Center Image - visible when sidebar is closed */}
+      <div
+        className="hidden md:block fixed bottom-0 left-1/2 z-[9] pointer-events-none"
+        style={{
+          transition: 'opacity 0.5s ease, transform 0.5s ease',
+          opacity: sidebarOpen ? 0 : 1,
+          transform: sidebarOpen ? 'translateX(-50%) scale(0.3)' : 'translateX(-50%) scale(1)',
+          transformOrigin: 'bottom center',
+          maxWidth: '300px',
+          width: '22vw',
+          minWidth: '180px',
+          mixBlendMode: 'darken',
+        }}
+      >
+        <img
+          src="/seeman.png"
+          alt="Seeman"
+          className="w-full h-auto object-contain select-none"
+          draggable={false}
+          style={{
+            filter: 'contrast(1.05) brightness(1.05)'
+          }}
+        />
+      </div>
+
+      {/* Decorative Leader Image (Right) - visible when sidebar is closed */}
+      <div
+        className="hidden md:block fixed bottom-0 right-0 z-10 pointer-events-none"
+        style={{
+          transition: 'opacity 0.5s ease, transform 0.5s ease',
+          opacity: sidebarOpen ? 0 : 1,
+          transform: sidebarOpen ? 'scale(0.3) translateX(50%)' : 'scale(1) translateX(0)',
+          transformOrigin: 'bottom right',
+          maxWidth: '260px',
+          width: '18vw',
+          minWidth: '160px',
+          mixBlendMode: 'darken',
+        }}
+      >
+        <img
+          src="/leader-point.png"
           alt="Leader"
           className="w-full h-auto object-contain select-none"
           draggable={false}

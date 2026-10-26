@@ -53,8 +53,39 @@ class PredictionAPIService:
             from ml.features.engineer import FeatureEngineer
             engineer = FeatureEngineer(clean_df)
             
-            # Assume same candidates/parties run as in the latest election for this constituency
-            target_df = clean_df[(clean_df['constituency_name'].str.lower() == search_name) & (clean_df['year'] == clean_df['year'].max())].copy()
+            import re
+            def base_name(name):
+                """Strip (SC)/(ST) suffixes and normalize for matching."""
+                return re.sub(r'\s*\((?:sc|st)\)\s*$', '', str(name).strip().lower())
+            
+            latest_year = clean_df['year'].max()
+            
+            # Try exact match first
+            target_df = clean_df[(clean_df['constituency_name'].str.lower() == search_name) & (clean_df['year'] == latest_year)].copy()
+            
+            # If no exact match, try base-name match (handles Ponneri vs Ponneri (Sc))
+            if target_df.empty:
+                search_base = base_name(search_name)
+                clean_df['_base_name'] = clean_df['constituency_name'].apply(base_name)
+                target_df = clean_df[(clean_df['_base_name'] == search_base) & (clean_df['year'] == latest_year)].copy()
+                if '_base_name' in target_df.columns:
+                    target_df = target_df.drop(columns=['_base_name'])
+                if '_base_name' in clean_df.columns:
+                    clean_df = clean_df.drop(columns=['_base_name'])
+            
+            if target_df.empty:
+                # Last resort: try finding the constituency in ANY year and use that
+                all_years_df = clean_df[clean_df['constituency_name'].str.lower() == search_name]
+                if all_years_df.empty:
+                    search_base = base_name(search_name)
+                    clean_df['_base_name'] = clean_df['constituency_name'].apply(base_name)
+                    all_years_df = clean_df[clean_df['_base_name'] == search_base]
+                    if '_base_name' in clean_df.columns:
+                        clean_df = clean_df.drop(columns=['_base_name'])
+                if not all_years_df.empty:
+                    fallback_year = all_years_df['year'].max()
+                    target_df = all_years_df[all_years_df['year'] == fallback_year].copy()
+            
             target_df['year'] = year # Set to future target year
             
             party_features = engineer._build_party_features(clean_df)

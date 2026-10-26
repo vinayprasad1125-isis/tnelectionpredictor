@@ -16,13 +16,40 @@ def clean_and_merge_datasets(files: List[Tuple[str, int]], output_path: str):
         # ECI detailed results usually have 4 lines of junk at the top.
         # The actual headers are on row 5 (index 4).
         try:
-            df = pd.read_csv(input_path, skiprows=3) # Let's read and check headers
-            if 'STATE/UT NAME' not in df.columns:
-                 df = pd.read_csv(input_path, skiprows=4)
+            if '2011' in input_path:
+                df = pd.read_csv(input_path)
+                df['STATE/UT NAME'] = 'Tamil Nadu'
+                df['AC NO.'] = df['constituency_number']
+                df['AC NAME'] = df['constituency_name']
+                df['CANDIDATE NAME'] = df['candidate_name']
+                df['PARTY'] = df['party']
+                df['TOTAL'] = df['total_votes']
+                df['% VOTES POLLED'] = df['vote_percentage']
+            elif '2016' in input_path:
+                df = pd.read_csv(input_path, skiprows=2)
+            else:
+                df = pd.read_csv(input_path, skiprows=3)
+                if 'STATE/UT NAME' not in df.columns:
+                     df = pd.read_csv(input_path, skiprows=4)
         except Exception as e:
             logger.error(f"Failed to read {input_path}: {e}")
             continue
+
             
+        # Rename 2016 dataset columns to match others if needed
+        rename_map = {
+            'Constituency No.': 'AC NO.',
+            'Constituency Name': 'AC NAME',
+            'Candidate Name': 'CANDIDATE NAME',
+            ' Party Name': 'PARTY',
+            'Total Votes': 'TOTAL'
+        }
+        df = df.rename(columns=rename_map)
+
+        # Ensure STATE/UT NAME exists
+        if 'STATE/UT NAME' not in df.columns:
+            df['STATE/UT NAME'] = 'Tamil Nadu'
+
         # Drop summary "TURN OUT" rows where 'STATE/UT NAME' is "TURN OUT"
         if 'STATE/UT NAME' in df.columns:
             df = df[df['STATE/UT NAME'] != 'TURN OUT']
@@ -59,7 +86,11 @@ def clean_and_merge_datasets(files: List[Tuple[str, int]], output_path: str):
         elif '% VOTES POLLED' in df.columns:
             mapped_df['vote_percentage'] = pd.to_numeric(df['% VOTES POLLED'], errors='coerce').fillna(0.0)
         else:
-            mapped_df['vote_percentage'] = 0.0
+            # We can calculate vote percentage for 2016 later or set it to 0
+            if 'Total Valid Votes' in df.columns:
+                mapped_df['vote_percentage'] = 0.0 # Will require group by, let's keep 0 for now
+            else:
+                mapped_df['vote_percentage'] = 0.0
 
         all_mapped_dfs.append(mapped_df)
 
@@ -74,8 +105,10 @@ def clean_and_merge_datasets(files: List[Tuple[str, int]], output_path: str):
 if __name__ == '__main__':
     # Define the datasets to merge
     datasets = [
+        ('ml/data/cleaned/tamil_nadu_2011_cleaned.csv', 2011),
         ('ml/data/raw/10- Detailed Results.csv', 2021),
-        ('ml/data/raw/10-Detailed_Results_1778165153.csv', 2026)
+        ('ml/data/raw/10-Detailed_Results_1778165153.csv', 2026),
+        ('ml/data/raw/10-Detailed_Results_2016.csv', 2016)
     ]
     output_csv = 'ml/data/raw/elections.csv'
     

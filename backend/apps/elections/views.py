@@ -15,7 +15,7 @@ class ElectionResultViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ElectionResult.objects.all().select_related('election', 'constituency', 'candidate', 'party')
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['election', 'constituency', 'candidate', 'party', 'is_winner']
-    ordering_fields = ['votes_received', 'vote_percentage']
+    ordering_fields = ['votes_received', 'vote_percentage', 'election__year']
     
     def get_serializer_class(self):
         if self.action == 'retrieve':

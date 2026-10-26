@@ -9,12 +9,16 @@ export const dataService = {
     const response = await api.get('/constituencies/', { params });
     return response.data;
   },
+  getConstituencySummary: async () => {
+    const response = await api.get('/constituencies/summary/');
+    return response.data;
+  },
   getParties: async (params = {}) => {
     const response = await api.get('/parties/', { params });
     return response.data;
   },
   getElectionResults: async (params = {}) => {
-    const response = await api.get('/election-results/', { params });
+    const response = await api.get('/results/', { params });
     return response.data;
   }
 };

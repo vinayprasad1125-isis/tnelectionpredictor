@@ -7,17 +7,17 @@ class Evaluator:
     @staticmethod
     def evaluate_classification(y_true, y_pred, y_prob=None):
         metrics = {
-            "accuracy": accuracy_score(y_true, y_pred),
-            "balanced_accuracy": balanced_accuracy_score(y_true, y_pred),
-            "precision": precision_score(y_true, y_pred, average='binary', zero_division=0),
-            "recall": recall_score(y_true, y_pred, average='binary', zero_division=0),
-            "f1": f1_score(y_true, y_pred, average='binary', zero_division=0),
-            "macro_f1": f1_score(y_true, y_pred, average='macro', zero_division=0),
+            "accuracy": float(accuracy_score(y_true, y_pred)),
+            "balanced_accuracy": float(balanced_accuracy_score(y_true, y_pred)),
+            "precision": float(precision_score(y_true, y_pred, average='binary', zero_division=0)),
+            "recall": float(recall_score(y_true, y_pred, average='binary', zero_division=0)),
+            "f1": float(f1_score(y_true, y_pred, average='binary', zero_division=0)),
+            "macro_f1": float(f1_score(y_true, y_pred, average='macro', zero_division=0)),
             "confusion_matrix": confusion_matrix(y_true, y_pred).tolist()
         }
         if y_prob is not None:
             try:
-                metrics["log_loss"] = log_loss(y_true, y_prob)
+                metrics["log_loss"] = float(log_loss(y_true, y_prob))
             except Exception:
                 pass
         return metrics
@@ -25,9 +25,9 @@ class Evaluator:
     @staticmethod
     def evaluate_regression(y_true, y_pred):
         return {
-            "mae": mean_absolute_error(y_true, y_pred),
-            "rmse": np.sqrt(mean_squared_error(y_true, y_pred)),
-            "r2": r2_score(y_true, y_pred)
+            "mae": float(mean_absolute_error(y_true, y_pred)),
+            "rmse": float(np.sqrt(mean_squared_error(y_true, y_pred))),
+            "r2": float(r2_score(y_true, y_pred))
         }
 
     @staticmethod
@@ -53,6 +53,6 @@ class Evaluator:
             if len(all_features) == len(importances):
                 feat_dict = dict(zip(all_features, importances))
                 # Sort by importance
-                return {k: v for k, v in sorted(feat_dict.items(), key=lambda item: item[1], reverse=True)}
+                return {k: float(v) for k, v in sorted(feat_dict.items(), key=lambda item: item[1], reverse=True)}
         
         return {}

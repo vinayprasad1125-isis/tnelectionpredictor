@@ -1,6 +1,18 @@
-from django.db.models import Sum, Count, F, Max
+from django.db.models import Sum, Count, F, Max, Q
 from apps.elections.models import Election, ElectionResult
 from apps.constituencies.models import Constituency
+
+# Party abbreviation aliases - maps variant names across different election years
+PARTY_ALIASES = {
+    'ADMK': ['ADMK', 'AIADMK'],
+    'AIADMK': ['ADMK', 'AIADMK'],
+    'CPI(M)': ['CPI(M)', 'CPM'],
+    'CPM': ['CPI(M)', 'CPM'],
+}
+
+def get_party_abbreviations(party_abbr):
+    """Returns list of all known abbreviation variants for a party."""
+    return PARTY_ALIASES.get(party_abbr, [party_abbr])
 
 class AnalyticsService:
     @staticmethod

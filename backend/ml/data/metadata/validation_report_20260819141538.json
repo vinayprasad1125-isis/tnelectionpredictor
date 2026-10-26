@@ -1,0 +1,22 @@
+{
+    "rows_processed": 15247,
+    "duplicates": 21,
+    "missing_values": {
+        "year": 0,
+        "election_type": 0,
+        "state": 0,
+        "constituency_number": 0,
+        "constituency_name": 0,
+        "constituency_type": 0,
+        "district": 0,
+        "candidate_name": 0,
+        "party_abbreviation": 0,
+        "party_name": 0,
+        "votes_received": 0,
+        "vote_percentage": 0
+    },
+    "invalid_votes": 0,
+    "invalid_percentages": 0,
+    "multiple_winners": 234,
+    "validation_status": "WARN - Duplicates found, will be cleaned"
+}

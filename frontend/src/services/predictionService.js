@@ -5,7 +5,7 @@ export const predictionService = {
     const response = await api.get('/predictions/models/');
     return response.data;
   },
-  predictConstituency: async (constituencyName, year = 2026) => {
+  predictConstituency: async (constituencyName, year = 2031) => {
     const response = await api.get(`/predictions/constituency/${constituencyName}/`, { params: { year } });
     return response.data;
   },
